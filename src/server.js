@@ -1,5 +1,6 @@
 var http = require("http");
 var fs = require("fs");
+var querystring = require("querystring");
 
 var message = "Harry and Jessie are lovin' the Node Girls workshop!";
 
@@ -36,7 +37,18 @@ function handler(request, response) {
       response.end(file);
     });
   }
+  // need to create route for form post (/create-post endpoint), before else statement?
+  var allTheData = "";
+  request.on("data", function(chunkOfData) {
+    allTheData += chunkOfData;
+  });
+  request.on("end", function() {
+    var convertedData = querystring.parse(allTheData);
+    console.log(allTheData);
+    response.end();
+  });
 }
+
 var server = http.createServer(handler);
 
 server.listen(3000, function() {
